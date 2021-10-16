@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<!-- Create a div where the graph will take place -->
+<div id="my_dataviz"></div>
+
+<img src="../interactive/1.jpg"/>
+
+<script>
+
+// set the dimensions and margins of the graph
+var margin = {top: 10, right: 30, bottom: 30, left: 60},
+    width = 860 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+// append the svg object to the body of the page
+var svg = d3.select("#my_dataviz")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .call(d3.zoom().on("zoom", function () {
+       svg.attr("transform", d3.event.transform)
+    }))
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+//Read the data
+d3.csv("tpopulation.csv",
+
+  // When reading the csv, I must format variables:
+  function(d){
+    return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
+  },
+
+  // Now I can use this dataset:
+  function(data) {
+
+    // Add X axis --> it is a date format
+    var x = d3.scaleTime()
+      .domain(d3.extent(data, function(d) { return d.date; }))
+      .range([ 0, width ]);
+    svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+    // Add Y axis
+    var y = d3.scaleLinear()
+      .domain([0, d3.max(data, function(d) { return +d.value; })])
+      .range([ height, 0 ]);
+    svg.append("g")
+      .call(d3.axisLeft(y));
+
+    // Add the line
+    svg.append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d) { return x(d.date) })
+        .y(function(d) { return y(d.value) })
+        )
+
+            // create a tooltip
+            var Tooltip = d3.select("#my_dataviz")
+              .append("div")
+              .style("opacity", 0)
+              .attr("class", "tooltip")
+              .style("background-color", "white")
+              .style("border", "solid")
+              .style("border-width", "2px")
+              .style("border-radius", "5px")
+              .style("padding", "5px")
+
+              // Three function that change the tooltip when user hover / move / leave a cell
+              var mouseover = function(d) {
+                Tooltip
+                  .style("opacity", 1)
+              }
+              var mousemove = function(d) {
+                d3.select(this).attr("r",10)
+                if(d.value == 28595){
+                Tooltip
+                  .html("Rhino population: " + d.value + "  in  " + d.date + "                ,CITE entered into force in order to protect endangered wild animals.")
+                  .style("left", (d3.mouse(this)[0]+70) + "px")
+                  .style("top", (d3.mouse(this)[1]) + "px")
+                }else if(d.value == 5425){
+                  Tooltip
+                    .html("Rhino population: " + d.value + "  in  " + d.date + "                ,Kaziranga National Park has been included in the World Heritage List")
+                    .style("left", (d3.mouse(this)[0]+70) + "px")
+                    .style("top", (d3.mouse(this)[1]) + "px")
+                }else if(d.value == 2163){
+                  Tooltip
+                    .html("Rhino population: " + d.value + "  in  " + d.date + "                , Botswana Rhino Reintroduction Project begins; (First white rhino released to the wild)")
+                    .style("left", (d3.mouse(this)[0]+70) + "px")
+                    .style("top", (d3.mouse(this)[1]) + "px")
+                }else if(d.value == 2843){
+                  Tooltip
+                    .html("Rhino population: " + d.value + "  in  " + d.date + "                , First black rhino released into the wild")
+                    .style("left", (d3.mouse(this)[0]+70) + "px")
+                    .style("top", (d3.mouse(this)[1]) + "px")
+                }else if(d.value == 3954){
+                  Tooltip
+                    .html("Rhino population: " + d.value + "  in  " + d.date + "                , negotiations begin between the three countries for black rhino translocations")
+                    .style("left", (d3.mouse(this)[0]+70) + "px")
+                    .style("top", (d3.mouse(this)[1]) + "px")
+                }else if(d.value == 4020){
+                  Tooltip
+                    .html("Rhino population: " + d.value + "  in  " + d.date + "                , Javan Rhino was Listed on the IUCN Red List of Threatened Species 2008 VER 3.1 Critically Endangered (CR)")
+                    .style("left", (d3.mouse(this)[0]+70) + "px")
+                    .style("top", (d3.mouse(this)[1]) + "px")
+                }else if(d.value == 3987){
+                  Tooltip
+                    .html("Rhino population: " + d.value + "  in  " + d.date + "                , two MSc degrees completed")
+                    .style("left", (d3.mouse(this)[0]+70) + "px")
+                    .style("top", (d3.mouse(this)[1]) + "px")
+                }else if(d.value == 4216){
+                  Tooltip
+                    .html("Rhino population: " + d.value + "  in  " + d.date + "                , WWF announced officially that Javan rhino species extinct in Vietnam")
+                    .style("left", (d3.mouse(this)[0]+70) + "px")
+                    .style("top", (d3.mouse(this)[1]) + "px")
+                }else if(d.value == 4346){
+                  Tooltip
+                    .html("Rhino population: " + d.value + "  in  " + d.date + "                , black rhino was Listed on the IUCN Red List of Threatened Species VER 3.1 Critically Endangered (CR)")
+                    .style("left", (d3.mouse(this)[0]+70) + "px")
+                    .style("top", (d3.mouse(this)[1]) + "px")
+                }else if(d.value == 4641){
+                  Tooltip
+                    .html("Rhino population: " + d.value + "  in  " + d.date + "                , three cross border translocations from South Africa into Botswana")
+                    .style("left", (d3.mouse(this)[0]+70) + "px")
+                    .style("top", (d3.mouse(this)[1]) + "px")
+                }else{
+                  Tooltip
+                  .html("Rhino population: " + d.value + "  in  " + d.date)
+                  .style("left", (d3.mouse(this)[0]+70) + "px")
+                  .style("top", (d3.mouse(this)[1]) + "px")
+                }
+              }
+              var mouseleave = function(d) {
+                d3.select(this).attr("r",5)
+                Tooltip
+                  .style("opacity", 0)
+              }
+
+
+            // Add the points
+            svg
+              .append("g")
+              .selectAll("dot")
+              .data(data)
+              .enter()
+              .append("circle")
+                .attr("class", "myCircle")
+                .attr("cx", function(d) { return x(d.date) } )
+                .attr("cy", function(d) { return y(d.value) } )
+                .attr("r", 5)
+                .attr("stroke", "#69b3a2")
+                .attr("stroke-width", 2)
+                .attr("fill", function(d){if(d.value == 28595){
+                  return '#CD5555';
+                }else if(d.value == 5425){
+                  return '#CD5555';
+                }else if(d.value == 2163){
+                  return '#CD5555';
+                }else if(d.value == 2843){
+                  return '#CD5555';
+                }else if(d.value == 3954){
+                  return '#CD5555';
+                }else if(d.value == 4020){
+                  return '#CD5555';
+                }else if(d.value == 3987){
+                  return '#CD5555';
+                }else if(d.value == 4216){
+                  return '#CD5555';
+                }else if(d.value == 4346){
+                  return '#CD5555';
+                }else if(d.value == 4641){
+                  return '#CD5555';
+                }else{return "#69b3a2";}})
+                .on("mouseover", mouseover)
+                .on("mousemove", mousemove)
+                .on("mouseleave", mouseleave)
+})
+
+
+</script>
